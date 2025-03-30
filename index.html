@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: black;
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header img {
+            width: 200px;
+            height: 50px;
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: #333;
+            position: fixed;
+            top: 60px; /* Adjust this value if your header height changes */
+            width: 100%;
+            z-index: 999;
+        }
+        nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+            flex-grow: 1;
+        }
+        nav a:hover {
+            background-color: #575757;
+        }
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+            margin-top: 1px;
+        }
+        .category-card {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+        }
+        .category-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .category-card p {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .landing-page {
+            text-align: center;
+            padding: 100px 2px;
+        }
+        .landing-page h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .landing-page p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .landing-page button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .landing-page button:active {
+            background-color: #0056b3;
+        }
+        .container {
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #e0e0e0; /* Light gray for scanner section */
+            padding: 20px;
+        }
+        .container h1 {
+            margin-top: 140px; /* Adjusted to account for the header and nav */
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:active {
+            background-color: #0056b3;
+        }
+        #loading {
+            font-size: 18px;
+            color: #007BFF;
+            margin-top: 20px;
+        }
+        #productInfo {
+            display: none;
+            text-align: center;
+            width: 80%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+
+        .product-card img {
+            width: 100px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+        .about, .contact, .measurement {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .about {
+            background-color: #d0d0d0; /* Slightly darker gray for About section */
+        }
+        .about h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .about p {
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        .contact {
+            background-color: #c0c0c0; /* Even darker gray for Contact section */
+        }
+        .contact h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .contact p {
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        .measurement {
+            background-color: #f0f0f0; /* Light gray for Measurement section */
+        }
+        .measurement h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .measurement p {
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        video {
+            width: 320px;
+            height: 240px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin-top: 20px;
+            position: relative;
+        }
+        .guide-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 30%;
+            border: 2px dashed #007BFF;
+            box-sizing: border-box;
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+        @media (max-width: 600px) {
+            video {
+                width: 100%;
+                height: auto;
+            }
+            .guide-box {
+                width: 80%;
+                height: 30%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="images/logologo.png" alt="The Green-scanner Logo"> <!-- Placeholder for the logo -->
+    </header>
+    
+    <nav>
+        <a href="#home">Hem</a>
+        <a href="#about">Om oss</a>
+        <a href="#contact">Kontakt</a>
+    </nav>
+
+    <div id="home" class="landing-page">
+        <h1>Välkommen till Green-scanner</h1>
+        <p>Green-scanner är en scanningsverktyg för att jämföra CO2-påverkan mellan matvaror. </p>
+        <p>Klicka på en kategori nedan för att jämföra klimat-påverkan mellan två produkter inom en kategori för att hjälpa dig göra klimatsmarta val när du handlar</p>
+    </div>
+
+    <!-- Categories Grid Section -->
+    <section class="categories-grid">
+        <div class="category-card" onclick="window.location.href='scanner.html?category=kött'">
+            <img src="images/kött.jpg" alt="Kött">
+            <p>Kött</p>
+        </div>
+        <div class="category-card" onclick="window.location.href='scanner.html?category=fisk'">
+            <img src="images/fisk.jpg" alt="Fisk">
+            <p>Fisk</p>
+        </div>
+        <div class="category-card" onclick="window.location.href='scanner.html?category=mejeri'">
+            <img src="images/mejeri.png" alt="Mejeri">
+            <p>Mejeri</p>
+        </div>
+        <div class="category-card" onclick="window.location.href='scanner.html?category=ris'">
+            <img src="images/ris.jpg" alt="Ris">
+            <p>Ris</p>
+        </div>
+        <div class="category-card" onclick="window.location.href='scanner.html?category=ägg'">
+            <img src="images/ägg.jpg" alt="Ägg">
+            <p>Ägg</p>
+        </div>
+        <div class="category-card" onclick="window.location.href='scanner.html?category=övrigt'">
+            <img src="images/övrigt.jpg" alt="Övrigt">
+            <p>Övrigt</p>
+        </div>
+    </section>
+
+    <div id="measurement" class="measurement">
+        <h1>Mätningen</h1>
+        <p>Green-scanner använder sig av ett eco-mätning system som tar hänsyn till flera faktorer, inklusive CO2-utsläpp, vattenförbrukning, och energiförbrukning under produktionen av matvaror. Genom att använda denna information kan du jämföra olika produkter och göra mer miljömedvetna val när du handlar.</p>
+        <p>Eco-indexet är en sammanfattande poäng som visar den totala miljöpåverkan av en produkt. En högre poäng indikerar en större påverkan på miljön. Tänk på att välja produkter med lägre eco-index för att minska din klimatpåverkan.</p>
+    </div>
+
+    <div id="about" class="about">
+        <h1>Om projektet</h1>
+        <p>Green-scanner utvecklades i syftet för att öka klimatmedvetenheten hos användarna & främja en ökad förståelse för hur personliga mat-val kan bidra till att minska klimatutsläppen.</p>
+    </div>
+
+    <div id="contact" class="contact">
+        <h1>Kontakta Oss</h1>
+        <p>Har du några funderingar eller feedback? Skriv till <a href="mailto:anlinne@kth.se">anlinne@kth.se</a>.</p>
+    </div>
+
+    
+    <footer>
+        &copy; 2025 The Green-scanner.
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

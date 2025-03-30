@@ -1,0 +1,13 @@
+{
+    "kött": ["meat", "beef", "pork", "chicken", "lamb", "veal", "bacon", "ham", "turkey", "duck", "game meat", "ox", "sausage", "steak", "ribs", "fläsk", "nöt", "kyckling", "lamm", "kalkon", "anka", "viltkött", "korv", "kotlett", "färs", "biff", "revbensspjäll"],
+    
+    "mejeri": ["Mejeriprodukt", "Fett", "butter", "spreadable fats", "animal fats", "dairy-spread", "salted butters", "cheese", "milk", "cream", "yogurt", "curd", "ghee", "kefir", "lactose-free", "grädde", "mjölk", "yoghurt", "kesella", "kesofrutti", "kvarg", "fil", "feta", "parmesan", "brie", "mozarella", "gräddost", "laktosfri", "Smör", "Fett"],
+
+    "fisk": ["fish", "tuna", "salmon", "cod", "herring", "sardines", "mackerel", "shellfish", "shrimp", "prawns", "crab", "lobster", "clams", "mussels", "trout", "smoked fish", "fresh fish", "canned fish", "räkor", "kräftor", "lax", "torsk", "sill", "makrill", "krabba", "hummer", "blåmusslor", "fiskbullar"],
+
+    "ris": ["Snacks", "Sweet snacks", "Biscuits and cakes", "Breakfasts", "jasmine-rice", "basmati-rice", "brown-rice", "white-rice", "wild-rice", "glutinous-rice", "arborio-rice", "sushi-rice", "short-grain rice", "long-grain rice", "risgryn", "fullkornsris", "råris", "klibbris", "parboiled-rice"],
+
+    "ägg": ["egg", "eggs", "free-range eggs", "organic eggs", "hard-boiled egg", "soft-boiled egg", "scrambled eggs", "fried egg", "poached egg", "pasteurized egg", "liquid egg", "ägg", "ekologiska ägg", "långkokt ägg", "hårdkokt ägg", "lättkokt ägg", "äggvita", "äggula"],
+
+    "övrigt": ["a", "v", "food", "groceries", "x", "ingredients", "processed food", "frozen food", "organic food", "convenience food", "health food", "mat", "livsmedel", "ekologiskt", "halvfabrikat", "fryst mat", "snabbmat", "torrvaror"]
+}

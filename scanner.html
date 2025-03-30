@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: black;
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header img {
+            width: 200px;
+            height: 50px;
+        }
+        .back-button-container {
+            position: fixed;
+            top: 100px; /* Adjust based on your header height */
+            left: 10px;
+            z-index: 1001;
+        }
+        .back-button {
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #007BFF;
+            border-radius: 5px;
+        }
+        .container {
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #e0e0e0; /* Light gray for scanner section */
+            padding: 20px;
+            margin-top: 100px; /* Adjusted to account for the header */
+        }
+        .container h1 {
+            margin-top: 20px; /* Adjusted to account for the header */
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:active {
+            background-color: #0056b3;
+        }
+        #loading {
+            font-size: 18px;
+            color: #007BFF;
+            margin-top: 20px;
+        }
+        #productInfo {
+            display: none;
+            text-align: center;
+            width: 80%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Flexbox layout for product comparison */
+        #comparisonContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Center the items */
+            gap: 20px; /* Add some space between the cards */
+        }
+
+        .product-card {
+            width: calc(50% - 20px); /* 50% width for each card, leaving space between them */
+            padding: 15px;
+            border: 6px solid #ccc; /* Default border */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            text-align: center;
+            background-color: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        /* Green border for the lowest eco-impact product */
+        .product-card.low-impact {
+            border-color: green;
+        }
+
+        /* Red border for the higher eco-impact product */
+        .product-card.high-impact {
+            border-color: red;
+        }
+
+        /* Responsive design: make product cards stack on small screens */
+        @media screen and (max-width: 768px) {
+            .product-card {
+                width: 100%; /* 100% width on smaller screens */
+            }
+        }
+
+        video {
+            width: 320px;
+            height: 240px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin-top: 20px;
+            position: relative;
+        }
+        .guide-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 30%;
+            border: 2px dashed #007BFF;
+            box-sizing: border-box;
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+        @media (max-width: 600px) {
+            video {
+                width: 100%;
+                height: auto;
+            }
+            .guide-box {
+                width: 80%;
+                height: 30%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="images/logologo.png" alt="The Green-scanner Logo"> <!-- Placeholder for the logo -->
+    </header>
+
+    <div class="back-button-container">
+        <a href="javascript:history.back()" class="back-button">&larr; Tillbaka</a>
+    </div>
+
+    <div class="container">
+        <h1 id="categoryMessage">Scan Two Products</h1>
+        <p id="categoryDescription" style="font-size: 18px;"></p>
+        <button id="scanButton">Open Camera</button>
+        <div style="position: relative; display: inline-block;">
+            <video id="video" autoplay hidden></video>
+            <div class="guide-box" hidden></div>
+        </div>
+        <p id="result"></p>
+    </div>
+    
+    <div id="loading" hidden>Loading...</div>
+
+    <div id="productInfo">
+        <h2>Product Comparison</h2>
+        <div class="comparison-container" id="comparisonContainer">
+            <!-- Two product cards will be added dynamically here -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script type="module" src="app.js"></script>
+    
+</body>
+</html>
