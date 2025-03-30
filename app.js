@@ -47,26 +47,22 @@ async function openCamera() {
         loading.hidden = false;
         result.textContent = 'Initializing camera...';
 
-        // Request permission for video capture
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: { exact: "environment" }, // Use rear camera
-                width: { ideal: 1280 }, // Set ideal resolution
-                height: { ideal: 720 }  // Set ideal resolution
-            }
+        stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { 
+                facingMode: "environment" // Use the rear camera on mobile devices
+            } 
         });
         video.srcObject = stream;
         video.hidden = false;
         guideBox.hidden = false;
 
-        // Initialize Quagga for barcode scanning
         Quagga.init({
             inputStream: {
                 name: "Live",
                 type: "LiveStream",
                 target: video,
                 constraints: {
-                    facingMode: { exact: "environment" }, // Use rear camera
+                    facingMode: "environment",
                 },
             },
             decoder: {
@@ -117,6 +113,7 @@ async function openCamera() {
         loading.hidden = true;
     }
 }
+
 
 // Close Camera
 function closeCamera() {
