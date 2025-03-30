@@ -47,22 +47,26 @@ async function openCamera() {
         loading.hidden = false;
         result.textContent = 'Initializing camera...';
 
-        stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { 
-                facingMode: "environment" // Use the rear camera on mobile devices
-            } 
+        // Request permission for video capture
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: "environment", // Use rear camera
+                width: { ideal: 1280 }, // Set ideal resolution
+                height: { ideal: 720 }  // Set ideal resolution
+            }
         });
         video.srcObject = stream;
         video.hidden = false;
         guideBox.hidden = false;
 
+        // Initialize Quagga for barcode scanning
         Quagga.init({
             inputStream: {
                 name: "Live",
                 type: "LiveStream",
                 target: video,
                 constraints: {
-                    facingMode: "environment",
+                    facingMode: "environment", // Use rear camera
                 },
             },
             decoder: {
@@ -100,7 +104,7 @@ async function openCamera() {
                     setTimeout(() => {
                         Quagga.stop();
                         closeCamera();
-                    }, 10000); // 1000 milliseconds = 1 second delay
+                    }, 1000); // 1000 milliseconds = 1 second delay
                 }
             });
 
@@ -113,6 +117,7 @@ async function openCamera() {
         loading.hidden = true;
     }
 }
+
 
 // Close Camera
 function closeCamera() {
