@@ -50,7 +50,7 @@ async function openCamera() {
         // Request permission for video capture
         stream = await navigator.mediaDevices.getUserMedia({
             video: {
-                facingMode: "environment", // Use rear camera
+                facingMode: { exact: "environment" }, // Use rear camera
                 width: { ideal: 1280 }, // Set ideal resolution
                 height: { ideal: 720 }  // Set ideal resolution
             }
@@ -66,7 +66,7 @@ async function openCamera() {
                 type: "LiveStream",
                 target: video,
                 constraints: {
-                    facingMode: "environment", // Use rear camera
+                    facingMode: { exact: "environment" }, // Use rear camera
                 },
             },
             decoder: {
@@ -117,7 +117,6 @@ async function openCamera() {
         loading.hidden = true;
     }
 }
-
 
 // Close Camera
 function closeCamera() {
