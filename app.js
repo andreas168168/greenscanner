@@ -41,6 +41,18 @@ scanButton.addEventListener('click', () => {
     }
 });
 
+// Handle tab focus and blur events
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && stream) {
+        video.srcObject = stream;
+        video.hidden = false;
+        guideBox.hidden = false;
+    } else if (document.visibilityState === 'hidden') {
+        video.hidden = true;
+        guideBox.hidden = true;
+    }
+});
+
 // Initialize Quagga for scanning
 async function openCamera() {
     try {
@@ -48,13 +60,14 @@ async function openCamera() {
         result.textContent = 'Initializing camera...';
         console.log('Initializing camera...');
 
-        // Request permission for video capture
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: {
+        // Request permission for video and audio capture
+        stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { 
                 facingMode: { exact: "environment" }, // Use rear camera
                 width: { ideal: 1280 }, // Set ideal resolution
                 height: { ideal: 720 }  // Set ideal resolution
-            }
+            },
+            audio: true // Request microphone access
         });
 
         video.srcObject = stream;
