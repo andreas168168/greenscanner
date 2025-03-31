@@ -109,16 +109,19 @@
         }
         /* Fullscreen Video for Scanning */
         video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            z-index: 999;
-            display: none;
+            display: block !important;
+            width: 100%; 
+            max-width: 400px;
+            height: auto;
+            border: 2px solid #007BFF;
+            border-radius: 10px;
         }
         .guide-box {
+            display: block !important;
+            }
+
+
+        .guide-box22 {
             position: absolute;
             top: 50%;
             left: 50%;
