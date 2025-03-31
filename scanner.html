@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barcode Scanner</title>
     <style>
-        body, html {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden; /* Prevent scrolling */
-            font-family: Arial, sans-serif;
             background-color: #f4f4f9;
+            overflow: hidden; /* Prevent scrolling */
         }
-
         header {
             background-color: black;
             color: white;
@@ -28,43 +25,36 @@
             z-index: 1000;
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
         }
-
         header img {
             width: 200px;
             height: 50px;
         }
-
         .back-button-container {
             position: fixed;
-            top: 70px; /* Adjust this value if your header height changes */
-            left: 15px;
+            top: 100px;
+            left: 10px;
+            z-index: 1001;
         }
-
         .back-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007BFF;
             color: white;
+            font-size: 20px;
+            cursor: pointer;
             text-decoration: none;
+            padding: 5px 10px;
+            background-color: #007BFF;
             border-radius: 5px;
-            font-size: 16px;
         }
-
-        .back-button:hover {
-            background-color: #0056b3;
-        }
-
         .container {
             text-align: center;
-            margin-top: 120px; /* Adjusted to account for the header and back button */
+            margin-bottom: 20px;
+            background-color: #e0e0e0;
+            padding: 20px;
+            margin-top: 100px;
         }
-
         .container h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
+            margin-top: 20px;
         }
-
-        #scanButton {
+        button {
             padding: 15px 30px;
             font-size: 16px;
             background-color: #007BFF;
@@ -73,20 +63,14 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
-        #scanButton:active {
+        button:active {
             background-color: #0056b3;
         }
-
         #loading {
             font-size: 18px;
             color: #007BFF;
-            text-align: center;
-            position: absolute;
-            top: 10px;
-            width: 100%;
+            margin-top: 20px;
         }
-
         #productInfo {
             display: none;
             text-align: center;
@@ -95,22 +79,44 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
         }
-
+        #comparisonContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .product-card {
+            width: calc(50% - 20px);
+            padding: 15px;
+            border: 6px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            background-color: #fff;
+            transition: border-color 0.3s ease;
+        }
+        .product-card.low-impact {
+            border-color: green;
+        }
+        .product-card.high-impact {
+            border-color: red;
+        }
+        @media screen and (max-width: 768px) {
+            .product-card {
+                width: 100%;
+            }
+        }
+        /* Fullscreen Video for Scanning */
         video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Cover the entire screen */
-            position: absolute;
-            top: 0;
-            left: 0;
-            border: none; /* Remove border */
-            border-radius: 0; /* Remove border radius */
-            display: none; /* Initially hidden */
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            z-index: 9999 !important;
+            display: block !important;
         }
 
         .guide-box {
@@ -122,20 +128,8 @@
             height: 30%;
             border: 2px dashed #007BFF;
             box-sizing: border-box;
-            pointer-events: none; /* Allow clicks to pass through */
-            display: none; /* Initially hidden */
-        }
-
-        @media (max-width: 600px) {
-            video {
-                width: 100%;
-                height: auto;
-            }
-
-            .guide-box {
-                width: 80%;
-                height: 30%;
-            }
+            z-index: 1000;
+            display: none;
         }
     </style>
 </head>
@@ -149,9 +143,9 @@
     </div>
 
     <div class="container">
-        <h1 id="categoryMessage">Scanna två produkter</h1>
+        <h1 id="categoryMessage">Scan Two Products</h1>
         <p id="categoryDescription" style="font-size: 18px;"></p>
-        <button id="scanButton">Öppna Kamera</button>
+        <button id="scanButton">Open Camera</button>
     </div>
 
     <video id="video" autoplay></video>
@@ -160,11 +154,12 @@
     <p id="loading" hidden>Loading...</p>
 
     <div id="productInfo">
-        <h2>Produktjämförelse</h2>
+        <h2>Product Comparison</h2>
         <div id="comparisonContainer"></div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script type="module" src="app.js"></script>
+    
 </body>
 </html>
