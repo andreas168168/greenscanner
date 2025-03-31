@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f9;
+            overflow: hidden; /* Prevent scrolling */
         }
         header {
             background-color: black;
@@ -30,7 +31,7 @@
         }
         .back-button-container {
             position: fixed;
-            top: 100px; /* Adjust based on your header height */
+            top: 100px;
             left: 10px;
             z-index: 1001;
         }
@@ -46,12 +47,12 @@
         .container {
             text-align: center;
             margin-bottom: 20px;
-            background-color: #e0e0e0; /* Light gray for scanner section */
+            background-color: #e0e0e0;
             padding: 20px;
-            margin-top: 100px; /* Adjusted to account for the header */
+            margin-top: 100px;
         }
         .container h1 {
-            margin-top: 20px; /* Adjusted to account for the header */
+            margin-top: 20px;
         }
         button {
             padding: 15px 30px;
@@ -79,56 +80,43 @@
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
-        /* Flexbox layout for product comparison */
         #comparisonContainer {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center; /* Center the items */
-            gap: 20px; /* Add some space between the cards */
+            justify-content: center;
+            gap: 20px;
         }
-
         .product-card {
-            width: calc(50% - 20px); /* 50% width for each card, leaving space between them */
+            width: calc(50% - 20px);
             padding: 15px;
-            border: 6px solid #ccc; /* Default border */
+            border: 6px solid #ccc;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
             text-align: center;
             background-color: #fff;
             transition: border-color 0.3s ease;
         }
-
-        .product-card img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
-        }
-
-        /* Green border for the lowest eco-impact product */
         .product-card.low-impact {
             border-color: green;
         }
-
-        /* Red border for the higher eco-impact product */
         .product-card.high-impact {
             border-color: red;
         }
-
-        /* Responsive design: make product cards stack on small screens */
         @media screen and (max-width: 768px) {
             .product-card {
-                width: 100%; /* 100% width on smaller screens */
+                width: 100%;
             }
         }
-
+        /* Fullscreen Video for Scanning */
         video {
-            width: 320px;
-            height: 240px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            margin-top: 20px;
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 999;
+            display: none;
         }
         .guide-box {
             position: absolute;
@@ -139,23 +127,14 @@
             height: 30%;
             border: 2px dashed #007BFF;
             box-sizing: border-box;
-            pointer-events: none; /* Allow clicks to pass through */
-        }
-        @media (max-width: 600px) {
-            video {
-                width: 100%;
-                height: auto;
-            }
-            .guide-box {
-                width: 80%;
-                height: 30%;
-            }
+            z-index: 1000;
+            display: none;
         }
     </style>
 </head>
 <body>
     <header>
-        <img src="images/logologo.png" alt="The Green-scanner Logo"> <!-- Placeholder for the logo -->
+        <img src="images/logo1.png" alt="The Green-scanner Logo">
     </header>
 
     <div class="back-button-container">
@@ -166,20 +145,16 @@
         <h1 id="categoryMessage">Scan Two Products</h1>
         <p id="categoryDescription" style="font-size: 18px;"></p>
         <button id="scanButton">Open Camera</button>
-        <div style="position: relative; display: inline-block;">
-            <video id="video" autoplay hidden></video>
-            <div class="guide-box" hidden></div>
-        </div>
-        <p id="result"></p>
     </div>
-    
-    <div id="loading" hidden>Loading...</div>
+
+    <video id="video" autoplay></video>
+    <div class="guide-box"></div>
+
+    <p id="loading" hidden>Loading...</p>
 
     <div id="productInfo">
         <h2>Product Comparison</h2>
-        <div class="comparison-container" id="comparisonContainer">
-            <!-- Two product cards will be added dynamically here -->
-        </div>
+        <div id="comparisonContainer"></div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
