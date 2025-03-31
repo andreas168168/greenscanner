@@ -56,15 +56,25 @@ document.addEventListener('visibilitychange', () => {
 // Initialize Quagga for scanning
 async function openCamera() {
     try {
+        // Ensure video is displayed properly
         video.style.display = "block";
         guideBox.style.display = "block";
 
-        stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "environment" }
+        // Check camera permission status
+        const permissions = await navigator.permissions.query({ name: 'camera' });
+        if (permissions.state === "denied") {
+            alert("Camera access is denied. Please enable it in your browser settings.");
+            return;
+        }
+
+        // Request camera stream
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { exact: "environment" } }
         });
 
         video.srcObject = stream;
 
+        // Ensure Quagga initializes correctly
         Quagga.init({
             inputStream: {
                 name: "Live",
@@ -82,20 +92,22 @@ async function openCamera() {
                 console.error('Error initializing Quagga:', err);
                 return;
             }
+            console.log("✅ Quagga initialized successfully.");
             Quagga.start();
         });
 
+        // Handle barcode detection
         Quagga.onDetected((result) => {
             const code = result.codeResult.code;
-            console.log("Scanned Barcode:", code);
+            console.log("✅ Scanned Barcode:", code);
             alert(`Barcode Scanned: ${code}`);
 
-            closeCamera(); // Close camera after scan
+            closeCamera(); // Stop camera after scanning
         });
 
     } catch (err) {
-        console.error('Error accessing the camera:', err);
-        alert('Please allow camera access to scan barcodes.');
+        console.error('❌ Error accessing the camera:', err);
+        alert('Failed to access the camera. Try using another browser.');
     }
 }
 
@@ -108,8 +120,10 @@ function closeCamera() {
     Quagga.stop();
 }
 
+// Ensure camera opens only when the button is clicked
 scanButton.addEventListener('click', openCamera);
-// Fetch Product Info
+
+
 async function fetchProductInfo(barcode) {
     try {
         loading.hidden = false;
