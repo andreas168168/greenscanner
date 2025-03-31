@@ -56,45 +56,62 @@ document.addEventListener('visibilitychange', () => {
 // Initialize Quagga for scanning
 async function openCamera() {
     try {
-        video.style.display = "block"; // Make sure it's visible
+        video.style.display = "block";
         guideBox.style.display = "block";
 
+        // Start the camera stream
         stream = await navigator.mediaDevices.getUserMedia({ 
             video: { facingMode: "environment" }
         });
 
         video.srcObject = stream;
-        video.play(); // Make sure it starts
+        console.log("🎥 Camera stream started successfully!");
 
-        console.log("Camera stream started successfully!");
+        // Ensure Quagga is stopped before re-initializing
+        Quagga.stop();
 
+        // Initialize Quagga
         Quagga.init({
             inputStream: {
                 name: "Live",
                 type: "LiveStream",
-                target: video,
+                target: video, // Attach to the correct video element
                 constraints: { facingMode: "environment" }
             },
             decoder: {
                 readers: ["ean_reader", "code_128_reader", "upc_reader"]
-            }
+            },
+            locate: true // Enables barcode detection
         }, (err) => {
             if (err) {
-                console.error('Error initializing Quagga:', err);
+                console.error("❌ Error initializing Quagga:", err);
+                alert("Quagga initialization failed!");
                 return;
             }
-            console.log("Quagga initialized successfully!");
+            console.log("✅ Quagga initialized successfully!");
             Quagga.start();
         });
 
-        // Debugging
-        console.log("Camera should be visible now!");
+        // Debugging: Check if Quagga is processing frames
+        Quagga.onProcessed((result) => {
+            console.log("🔍 Quagga is processing frames...");
+        });
+
+        // Handle barcode detection
+        Quagga.onDetected((result) => {
+            const code = result.codeResult.code;
+            console.log("✅ Barcode detected:", code);
+            alert(`Scanned Barcode: ${code}`);
+
+            closeCamera(); // Close camera after scanning
+        });
 
     } catch (err) {
-        console.error('Error accessing the camera:', err);
-        alert('Please allow camera access to scan barcodes.');
+        console.error("❌ Error accessing the camera:", err);
+        alert("Please allow camera access to scan barcodes.");
     }
 }
+
 
 // Function to close camera properly
 function closeCamera() {
