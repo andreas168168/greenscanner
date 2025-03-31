@@ -46,23 +46,30 @@ async function openCamera() {
     try {
         loading.hidden = false;
         result.textContent = 'Initializing camera...';
+        console.log('Initializing camera...');
 
-        stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { 
-                facingMode: "environment" // Use the rear camera on mobile devices
-            } 
+        // Request permission for video capture
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: { exact: "environment" }, // Use rear camera
+                width: { ideal: 1280 }, // Set ideal resolution
+                height: { ideal: 720 }  // Set ideal resolution
+            }
         });
+
         video.srcObject = stream;
         video.hidden = false;
         guideBox.hidden = false;
+        console.log('Camera stream started');
 
+        // Initialize Quagga for barcode scanning
         Quagga.init({
             inputStream: {
                 name: "Live",
                 type: "LiveStream",
                 target: video,
                 constraints: {
-                    facingMode: "environment",
+                    facingMode: { exact: "environment" }, // Use rear camera
                 },
             },
             decoder: {
@@ -78,9 +85,11 @@ async function openCamera() {
 
             Quagga.start();
             result.textContent = 'Scanning...';
+            console.log('Quagga initialized');
 
             Quagga.onDetected((data) => {
                 const barcode = data.codeResult.code;
+                console.log('Barcode detected:', barcode);
 
                 if (scannedBarcodes.includes(barcode)) {
                     result.textContent = `Barcode ${barcode} already scanned. Scan a different product.`;
@@ -114,7 +123,6 @@ async function openCamera() {
     }
 }
 
-
 // Close Camera
 function closeCamera() {
     if (stream) {
@@ -122,6 +130,7 @@ function closeCamera() {
     }
     video.hidden = true;
     guideBox.hidden = true;
+    console.log('Camera stream stopped');
 }
 
 // Fetch Product Info
@@ -129,6 +138,7 @@ async function fetchProductInfo(barcode) {
     try {
         loading.hidden = false;
         result.textContent = 'Fetching product info...';
+        console.log('Fetching product info for barcode:', barcode);
 
         const response = await fetch('http://127.0.0.1:8080/scan', {
             method: 'POST',
