@@ -81,7 +81,7 @@ async function openCamera() {
                 type: "LiveStream",
                 target: video,
                 constraints: {
-                    facingMode: "environment"
+                    facingMode: "user"
                 }
             },
             decoder: {
