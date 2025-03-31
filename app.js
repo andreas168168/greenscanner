@@ -30,7 +30,7 @@ const guideBox = document.querySelector('.guide-box');
 
 let scannedBarcodes = [];
 let scannedProducts = [];
-let stream;
+let stream = null;
 
 // Attach Event Listener to Scan Button
 scanButton.addEventListener('click', () => {
@@ -56,23 +56,15 @@ document.addEventListener('visibilitychange', () => {
 // Initialize Quagga for scanning
 async function openCamera() {
     try {
-        loading.hidden = false;
-        result.textContent = 'Initializing camera...';
-        console.log('Initializing camera...');
+        video.style.display = "block";
+        guideBox.style.display = "block";
 
-        // Request permission for video capture
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: "environment" // Use the rear camera on mobile devices
-            }
+        stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: "environment" }
         });
 
         video.srcObject = stream;
-        video.hidden = false;
-        guideBox.hidden = false;
-        console.log('Camera stream started');
 
-        // Initialize Quagga for barcode scanning
         Quagga.init({
             inputStream: {
                 name: "Live",
@@ -88,61 +80,35 @@ async function openCamera() {
         }, (err) => {
             if (err) {
                 console.error('Error initializing Quagga:', err);
-                result.textContent = 'Failed to initialize barcode scanner.';
-                loading.hidden = true;
                 return;
             }
-
             Quagga.start();
-            result.textContent = 'Scanning...';
-            console.log('Quagga initialized');
+        });
 
-            Quagga.onDetected((data) => {
-                const barcode = data.codeResult.code;
-                console.log('Barcode detected:', barcode);
+        Quagga.onDetected((result) => {
+            const code = result.codeResult.code;
+            console.log("Scanned Barcode:", code);
+            alert(`Barcode Scanned: ${code}`);
 
-                if (scannedBarcodes.includes(barcode)) {
-                    result.textContent = `Barcode ${barcode} already scanned. Scan a different product.`;
-                    return;
-                }
-
-                // Add the scanned barcode to the list
-                scannedBarcodes.push(barcode);
-                result.textContent = `Scanned barcode: ${barcode}`;
-
-                // Fetch product info after scanning the barcode
-                fetchProductInfo(barcode);
-
-                // Delay before scanning the next barcode
-                if (scannedBarcodes.length === 2) {
-                    // If two barcodes are scanned, stop Quagga and close the camera after 1 second
-                    setTimeout(() => {
-                        Quagga.stop();
-                        closeCamera();
-                    }, 1000); // 1000 milliseconds = 1 second delay
-                }
-            });
-
-            loading.hidden = true;
+            closeCamera(); // Close camera after scan
         });
 
     } catch (err) {
         console.error('Error accessing the camera:', err);
-        result.textContent = 'Please allow camera access to scan barcodes.';
-        loading.hidden = true;
+        alert('Please allow camera access to scan barcodes.');
     }
 }
 
-// Close Camera
 function closeCamera() {
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
     }
-    video.hidden = true;
-    guideBox.hidden = true;
-    console.log('Camera stream stopped');
+    video.style.display = "none";
+    guideBox.style.display = "none";
+    Quagga.stop();
 }
 
+scanButton.addEventListener('click', openCamera);
 // Fetch Product Info
 async function fetchProductInfo(barcode) {
     try {
