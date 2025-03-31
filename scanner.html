@@ -15,6 +15,92 @@
             background-color: #f4f4f9;
         }
 
+        header {
+            background-color: black;
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header img {
+            width: 200px;
+            height: 50px;
+        }
+
+        .back-button-container {
+            position: fixed;
+            top: 70px; /* Adjust this value if your header height changes */
+            left: 15px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 120px; /* Adjusted to account for the header and back button */
+        }
+
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        #scanButton {
+            padding: 15px 30px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #scanButton:active {
+            background-color: #0056b3;
+        }
+
+        #loading {
+            font-size: 18px;
+            color: #007BFF;
+            text-align: center;
+            position: absolute;
+            top: 10px;
+            width: 100%;
+        }
+
+        #productInfo {
+            display: none;
+            text-align: center;
+            width: 80%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
         video {
             width: 100%;
             height: 100%;
@@ -24,6 +110,7 @@
             left: 0;
             border: none; /* Remove border */
             border-radius: 0; /* Remove border radius */
+            display: none; /* Initially hidden */
         }
 
         .guide-box {
@@ -36,15 +123,7 @@
             border: 2px dashed #007BFF;
             box-sizing: border-box;
             pointer-events: none; /* Allow clicks to pass through */
-        }
-
-        #loading {
-            font-size: 18px;
-            color: #007BFF;
-            text-align: center;
-            position: absolute;
-            top: 10px;
-            width: 100%;
+            display: none; /* Initially hidden */
         }
 
         @media (max-width: 600px) {
@@ -61,9 +140,29 @@
     </style>
 </head>
 <body>
-    <video id="video" hidden></video>
+    <header>
+        <img src="images/logo1.png" alt="The Green-scanner Logo">
+    </header>
+
+    <div class="back-button-container">
+        <a href="javascript:history.back()" class="back-button">&larr; Tillbaka</a>
+    </div>
+
+    <div class="container">
+        <h1 id="categoryMessage">Scanna två produkter</h1>
+        <p id="categoryDescription" style="font-size: 18px;"></p>
+        <button id="scanButton">Öppna Kamera</button>
+    </div>
+
+    <video id="video" autoplay></video>
     <div class="guide-box"></div>
-    <div id="loading">Loading...</div>
+
+    <p id="loading" hidden>Loading...</p>
+
+    <div id="productInfo">
+        <h2>Produktjämförelse</h2>
+        <div id="comparisonContainer"></div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script type="module" src="app.js"></script>
