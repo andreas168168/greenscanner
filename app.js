@@ -56,32 +56,37 @@ document.addEventListener('visibilitychange', () => {
 // Initialize Quagga for scanning
 async function openCamera() {
     try {
-        // Ensure video is displayed properly
-        video.style.display = "block";
-        guideBox.style.display = "block";
+        console.log("📸 Trying to access camera...");
 
-        // Check camera permission status
-        const permissions = await navigator.permissions.query({ name: 'camera' });
+        // Check for camera permission before requesting access
+        const permissions = await navigator.permissions.query({ name: "camera" });
         if (permissions.state === "denied") {
-            alert("Camera access is denied. Please enable it in your browser settings.");
+            alert("❌ Camera access is denied. Please enable it in browser settings.");
             return;
         }
 
-        // Request camera stream
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { exact: "environment" } }
-        });
+        // Request camera access with fallback for mobile
+        const constraints = {
+            video: {
+                facingMode: "environment" // Try back camera
+            }
+        };
 
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
         video.srcObject = stream;
+        video.hidden = false;
+        guideBox.hidden = false;
 
-        // Ensure Quagga initializes correctly
+        console.log("✅ Camera stream started successfully!");
+
+        // Start Quagga barcode scanning
         Quagga.init({
             inputStream: {
                 name: "Live",
                 type: "LiveStream",
                 target: video,
                 constraints: {
-                    facingMode: "user"
+                    facingMode: "environment"
                 }
             },
             decoder: {
@@ -89,14 +94,14 @@ async function openCamera() {
             }
         }, (err) => {
             if (err) {
-                console.error('Error initializing Quagga:', err);
+                console.error("❌ Quagga Init Error:", err);
+                alert("Failed to initialize barcode scanner.");
                 return;
             }
-            console.log("✅ Quagga initialized successfully.");
+            console.log("✅ Quagga initialized!");
             Quagga.start();
         });
 
-        // Handle barcode detection
         Quagga.onDetected((result) => {
             const code = result.codeResult.code;
             console.log("✅ Scanned Barcode:", code);
@@ -106,22 +111,29 @@ async function openCamera() {
         });
 
     } catch (err) {
-        console.error('❌ Error accessing the camera:', err);
-        alert('Failed to access the camera. Try using another browser.');
+        console.error("❌ Error accessing the camera:", err);
+
+        if (err.name === "NotAllowedError") {
+            alert("Please allow camera access in your browser settings.");
+        } else if (err.name === "NotFoundError") {
+            alert("No camera found on this device.");
+        } else {
+            alert("Failed to access the camera.");
+        }
     }
 }
 
+// Function to close camera properly
 function closeCamera() {
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
     }
-    video.style.display = "none";
-    guideBox.style.display = "none";
+    video.hidden = true;
+    guideBox.hidden = true;
     Quagga.stop();
 }
 
-// Ensure camera opens only when the button is clicked
-scanButton.addEventListener('click', openCamera);
+scanButton.addEventListener("click", openCamera);
 
 
 async function fetchProductInfo(barcode) {
