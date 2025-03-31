@@ -60,14 +60,11 @@ async function openCamera() {
         result.textContent = 'Initializing camera...';
         console.log('Initializing camera...');
 
-        // Request permission for video and audio capture
-        stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { 
-                facingMode: { exact: "environment" }, // Use rear camera
-                width: { ideal: 1280 }, // Set ideal resolution
-                height: { ideal: 720 }  // Set ideal resolution
-            },
-            audio: true // Request microphone access
+        // Request permission for video capture
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: "environment" // Use the rear camera on mobile devices
+            }
         });
 
         video.srcObject = stream;
@@ -82,12 +79,12 @@ async function openCamera() {
                 type: "LiveStream",
                 target: video,
                 constraints: {
-                    facingMode: { exact: "environment" }, // Use rear camera
-                },
+                    facingMode: "environment"
+                }
             },
             decoder: {
-                readers: ["ean_reader", "code_128_reader", "upc_reader"],
-            },
+                readers: ["ean_reader", "code_128_reader", "upc_reader"]
+            }
         }, (err) => {
             if (err) {
                 console.error('Error initializing Quagga:', err);
@@ -156,7 +153,7 @@ async function fetchProductInfo(barcode) {
         const response = await fetch('http://127.0.0.1:8080/scan', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ barcode }),
+            body: JSON.stringify({ barcode })
         });
 
         const data = await response.json();
@@ -185,7 +182,7 @@ async function fetchProductInfo(barcode) {
                 origins: data.product_info.origins || 'No origin information',
                 manufacturingPlace: data.product_info.manufacturing_place || 'No manufacturing place info',
                 ecoScore: data.product_info.ecoscore_grade || 'No eco-score available',
-                image: data.product_info.image || '',
+                image: data.product_info.image || ''
             });
 
             if (scannedProducts.length === 2) {
