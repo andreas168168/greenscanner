@@ -108,7 +108,7 @@ async function openCamera() {
 
     } catch (err) {
         console.error("❌ Error accessing the camera:", err);
-        alert("Please allow camera access to scan barcodes.");
+        alert(`Error accessing the camera: ${err.message}`);
     }
 }
 
@@ -122,9 +122,6 @@ function closeCamera() {
     guideBox.hidden = true;
     Quagga.stop();
 }
-
-scanButton.addEventListener("click", openCamera);
-
 
 async function fetchProductInfo(barcode) {
     try {
@@ -220,7 +217,7 @@ async function displayComparison() {
         // Apply green or red border based on eco-impact score
         if (totalScore === minScore) {
             productCard.classList.add('low-impact');
-        } else if ( totalScore === maxScore) {
+        } else if (totalScore === maxScore) {
             productCard.classList.add('high-impact');
         }
 
