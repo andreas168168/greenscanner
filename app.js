@@ -60,7 +60,7 @@ async function openCamera() {
         guideBox.style.display = "block";
 
         // Start the camera stream
-        stream = await navigator.mediaDevices.getUserMedia({ 
+        stream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: "environment" }
         });
 
@@ -68,7 +68,9 @@ async function openCamera() {
         console.log("🎥 Camera stream started successfully!");
 
         // Ensure Quagga is stopped before re-initializing
-        Quagga.stop();
+        if (Quagga.initialized) {
+            Quagga.stop();
+        }
 
         // Initialize Quagga
         Quagga.init({
@@ -90,6 +92,7 @@ async function openCamera() {
             }
             console.log("✅ Quagga initialized successfully!");
             Quagga.start();
+            Quagga.initialized = true; // Mark Quagga as initialized
         });
 
         // Debugging: Check if Quagga is processing frames
@@ -103,6 +106,7 @@ async function openCamera() {
             console.log("✅ Barcode detected:", code);
             alert(`Scanned Barcode: ${code}`);
 
+            fetchProductInfo(code); // Fetch product info after scanning
             closeCamera(); // Close camera after scanning
         });
 
@@ -112,7 +116,6 @@ async function openCamera() {
     }
 }
 
-
 // Function to close camera properly
 function closeCamera() {
     if (stream) {
@@ -120,7 +123,9 @@ function closeCamera() {
     }
     video.hidden = true;
     guideBox.hidden = true;
-    Quagga.stop();
+    if (Quagga.initialized) {
+        Quagga.stop();
+    }
 }
 
 async function fetchProductInfo(barcode) {
